@@ -55,17 +55,12 @@ pipeline {
       }
     }
 
-    stage('Run Docker container on Jenkins Agent') {
-      steps {
-        sh 'docker run --name tomcat -d -p 8888:8080 sai-java-img:latest'
-      }
-    }
 
     stage('Push to DockerHub') {
       steps {
-        sh 'docker tag sai-java-img:latest narendra8686/sai-java-img:latest'
-        sh 'docker login -u narendra8686 -p Nani8686@'
-        sh 'docker push narendra8686/sai-java-img:latest'
+        sh 'docker tag skr-college-img:latest narendra8686/skr-college-img:latest'
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        sh 'docker push narendra8686/skr-college-img:latest'
       }
     }
 
@@ -74,6 +69,7 @@ pipeline {
     maven 'M2_HOME'
   }
   environment {
+    DOCKERHUB_CREDENTIALS = credentials('DockerAuth')
     TESTER = 'Nani'
     BUILD_ID = '1.0.0'
   }
